@@ -5,6 +5,7 @@
 #    https://aka.ms/AA7q20u
 #
 name: microservice
+registry: tsubakimoto
 services:
 - name: backend
   project: backend\backend.csproj
