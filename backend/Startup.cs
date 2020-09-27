@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -47,9 +48,25 @@ namespace backend
 
             app.UseAuthorization();
 
+            app.Map("/configs", HandleMapConfigs);
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+        }
+
+        private void HandleMapConfigs(IApplicationBuilder app)
+        {
+            app.Run(async context =>
+            {
+                var connectionStrings = Configuration.AsEnumerable();
+                var content = new System.Text.StringBuilder();
+                foreach (var config in connectionStrings)
+                {
+                    content.AppendLine($"{config.Key} -> {config.Value}");
+                }
+                await context.Response.WriteAsync(content.ToString());
             });
         }
     }
