@@ -11,6 +11,9 @@ services:
   project: backend\backend.csproj
 - name: frontend
   project: frontend\frontend.csproj
+  env:
+  - name: YOUR_NAME
+    value: "YUTA in YAML"
 - name: redis
   image: redis
   bindings:
