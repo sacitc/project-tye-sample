@@ -22,3 +22,13 @@ services:
 - name: redis-cli
   image: redis
   args: "redis-cli -h redis MONITOR"
+- name: mssql
+  image: mcr.microsoft.com/mssql/server:2019-latest
+  env:
+  - name: ACCEPT_EULA
+    value: "Y"
+  - name: SA_PASSWORD
+    value: "Passw0rd"
+  bindings:
+  - port: 1433
+    connectionString: "Server=${host},${port}; Database=testdb; User Id=SA; Password:${env:SA_PASSWORD};"
