@@ -13,16 +13,13 @@ namespace backend.Controllers
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
-
         private readonly ILogger<WeatherForecastController> _logger;
+        private readonly BackendContext _context;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger, BackendContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
         [HttpGet]
@@ -32,12 +29,13 @@ namespace backend.Controllers
 
             if (weather == null)
             {
+                var summaries = _context.Summaries.OrderBy(s => s.Id).Select(s => s.Name).ToArray();
                 var rng = new Random();
                 var forecasts = Enumerable.Range(1, 5).Select(index => new WeatherForecast
                 {
                     Date = DateTime.Now.AddDays(index),
                     TemperatureC = rng.Next(-20, 55),
-                    Summary = Summaries[rng.Next(Summaries.Length)]
+                    Summary = summaries[rng.Next(summaries.Length)]
                 })
                 .ToArray();
 
